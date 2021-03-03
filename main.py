@@ -1,4 +1,8 @@
 import sys
+
+from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QPixmap
+
 from design.design import Ui_MainWindow
 from PyQt5 import QtWidgets
 
@@ -11,7 +15,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.file = ''
         self.file_text = ''
         self.number = 0
-        self.i = 1  # страница
+        self.i = 1
 
         self.ui.btn_next.clicked.connect(self.next)
         self.ui.btn_start.clicked.connect(self.load)
@@ -30,7 +34,12 @@ class MyWin(QtWidgets.QMainWindow):
         self.i += 1
         self.ui.label_page.setText(str(self.i) + ' из ' + str(self.number))
         if self.i <= self.number:
-            self.ui.label_question.setText(self.file_text[2 + 5 * (self.i - 1)])
+            self.ui.label_question.setText(self.file_text[2 + 5 * (self.i - 1)].split('&')[0])
+            self.ui.label_image.setPixmap(QPixmap(1, 0))
+            if len(self.file_text[2 + 5 * (self.i - 1)].split('&')) > 1:
+                pixmap = QPixmap(self.file_text[2 + 5 * (self.i - 1)].split('&')[1])
+                pixmap = pixmap.scaled(self.width(), 200, Qt.KeepAspectRatio)
+                self.ui.label_image.setPixmap(QPixmap(pixmap))
             self.ui.radioButton_1.setText(self.file_text[3 + 5 * (self.i - 1)].split('&')[0])
             self.ui.radioButton_2.setText(self.file_text[4 + 5 * (self.i - 1)].split('&')[0])
             self.ui.radioButton_3.setText(self.file_text[5 + 5 * (self.i - 1)].split('&')[0])
@@ -64,7 +73,12 @@ class MyWin(QtWidgets.QMainWindow):
             self.ui.label_page.setText(str(self.i) + ' из ' + str(self.number))
 
             # set first position
-            self.ui.label_question.setText(self.file_text[2])
+            self.ui.label_question.setText(self.file_text[2].split('&')[0])
+            if len(self.file_text[2].split('&')) > 1:
+                pixmap = QPixmap(self.file_text[2].split('&')[1])
+                pixmap = pixmap.scaled(self.width(), 200, Qt.KeepAspectRatio)
+                self.ui.label_image.setPixmap(pixmap)
+
             self.ui.radioButton_1.setText(self.file_text[3].split('&')[0])
             self.ui.radioButton_2.setText(self.file_text[4].split('&')[0])
             self.ui.radioButton_3.setText(self.file_text[5].split('&')[0])
